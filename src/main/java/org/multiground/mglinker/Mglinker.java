@@ -8,9 +8,9 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 
 @Plugin(
-        id = "mglinker",
-        name = "Mglinker",
-        version = BuildConstants.VERSION,
+        id = "@ID@",
+        name = "@NAME@",
+        version = "@VERSION@",
         authors = {"GiftShower_"}
 )
 public class Mglinker {
