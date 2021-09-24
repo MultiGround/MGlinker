@@ -1,13 +1,15 @@
 package org.multiground.mglinker;
 
-import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.player.TabListEntry;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.node.NodeType;
@@ -28,8 +30,24 @@ public class SyncALot{
         this.luckPerms = LuckPermsProvider.get();
     }
 
-    @Subscribe(order = PostOrder.EARLY)
+    @Subscribe
+    public void onJoin(ServerConnectedEvent event){
+        for(Player p: server.getAllPlayers()){
+            p.getTabList().removeEntry(event.getPlayer().getGameProfile().getId());
+
+            p.getTabList().addEntry(TabListEntry.builder()
+                            .displayName(Component.text(event.getPlayer().getUsername()))
+                            .profile(event.getPlayer().getGameProfile())
+                            .gameMode(0)
+                            .tabList(p.getTabList())
+                            .latency(((int) event.getPlayer().getPing()))
+                    .build());
+        }
+    }
+
+    @Subscribe
     public void onChat(PlayerChatEvent event){
+        System.out.println(event.getMessage());
         String content = event.getMessage();
         String sendAt = "";
         for(RegisteredServer c: server.getAllServers()){
@@ -40,7 +58,7 @@ public class SyncALot{
             }
         }
         event.setResult(PlayerChatEvent.ChatResult.denied());
-        content = COLOR_PATTERN.matcher(content).replaceAll("");
+
         String playerGroup = luckPerms
                 .getPlayerAdapter(Player.class)
                 .getUser(event.getPlayer())
@@ -57,9 +75,10 @@ public class SyncALot{
                     .map(PrefixNode::getMetaValue)
                     .collect(Collectors.toSet());
         }
-        String toSend = String.format("[%s]-(%s%s) %s", sendAt, prefix, event.getPlayer().getUsername(), content.indexOf(0));
+        String toSend = String.format("[%s]-%s", sendAt, prefix.toArray()[0]);
         for(Player p: server.getAllPlayers()){
-            p.sendMessage(Component.text(toSend));
+            p.sendMessage(Component.text(toSend).append(Component.text(String.format("%s > %s",
+                    event.getPlayer().getUsername(), content)).color(TextColor.color(255,255,255))));
         }
     }
 }

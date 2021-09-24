@@ -3,15 +3,19 @@ package org.multiground.mglinker;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 
-@Plugin(
-        id = "@ID@",
+@Plugin(id = "@ID@",
         name = "@NAME@",
-        version = "@VERSION@",
-        authors = {"GiftShower_"}
+        description = "Link",
+        version = "@VERSION",
+        authors = {"GiftShower_"},
+        dependencies = {
+            @Dependency(id = "luckperms")
+        }
 )
 public class Mglinker {
     private final ProxyServer server;
