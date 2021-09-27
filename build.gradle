@@ -21,6 +21,7 @@ dependencies {
     compileOnly 'net.luckperms:api:5.3'
 
     implementation 'net.kyori:adventure-serializer-configurate3:4.9.0'
+    implementation "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
 }
 
 blossom{
