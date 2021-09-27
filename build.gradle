@@ -33,6 +33,8 @@ blossom{
 shadowJar {
     dependencies {
         include(dependency('net.kyori:adventure-serializer-configurate3'))
+        include(dependency('net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'))
     }
     relocate 'net.kyori.adventure.serializer.configurate3', 'org.multiground.mglinker.libs.adventure.configurate3'
+    relocate 'net.kyori.adventure.text.minimessage', 'org.multiground.mglinker.libs.adventure.text.minimessage'
 }
