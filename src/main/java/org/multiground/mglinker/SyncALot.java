@@ -9,9 +9,6 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.player.TabListEntry;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.Style;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.transformation.TransformationType;
 import net.luckperms.api.LuckPerms;
@@ -37,9 +34,8 @@ public class SyncALot{
     public void onJoin(ServerConnectedEvent event){
         for(Player p: server.getAllPlayers()){
             p.getTabList().removeEntry(event.getPlayer().getGameProfile().getId());
-
             p.getTabList().addEntry(TabListEntry.builder()
-                            .displayName(Component.text(event.getPlayer().getUsername()))
+                            .displayName(Component.text("[MultiGround] " + event.getPlayer().getUsername()))
                             .profile(event.getPlayer().getGameProfile())
                             .gameMode(0)
                             .tabList(p.getTabList())
@@ -84,16 +80,18 @@ public class SyncALot{
                     .map(PrefixNode::getMetaValue)
                     .collect(Collectors.toSet());
         }
-        String toSend = String.format("[%s]-%s%s > %s", sendAt, prefix.toArray()[0]
+        String toSend = String.format("[%s]-%s<reset>%s > %s", sendAt, prefix.toArray()[0]
                 , event.getPlayer().getUsername(), content);
 
         MiniMessage mm = MiniMessage.builder()
                 .transformation(TransformationType.COLOR)
                 .transformation(TransformationType.DECORATION)
                 .transformation(TransformationType.RESET)
+                .transformation(TransformationType.GRADIENT)
                 .build();
+
         for(Player p: server.getAllPlayers()){
-            p.sendMessage(mm.parse(toSend));
+            p.sendMessage(mm.parse(toSend).asComponent());
         }
     }
 }

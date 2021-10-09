@@ -2,15 +2,23 @@ plugins {
     id 'java-library'
     id "com.github.johnrengelman.shadow" version "7.0.0"
     id 'net.kyori.blossom' version '1.3.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.5.30'
+    id 'org.springframework.boot' version '2.5.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 group = 'org.multiground'
-version = '1.0.0'
+version = '1.0.1'
+
 repositories {
     mavenCentral()
     maven {
         name = 'velocitypowered-repo'
         url = 'https://nexus.velocitypowered.com/repository/maven-public/'
+    }
+    maven {
+        name = 'jitpack.io'
+        url = 'https://jitpack.io'
     }
 }
 
@@ -19,9 +27,14 @@ dependencies {
     annotationProcessor 'com.velocitypowered:velocity-api:3.0.0'
 
     compileOnly 'net.luckperms:api:5.3'
+    compileOnly 'io.vertx:vertx-core:4.1.4'
+    compileOnly 'io.vertx:vertx-lang-kotlin:4.1.4'
+    compileOnly 'com.github.simplix-softworks:simplixstorage:3.2.3'
+    compileOnly 'org.springframework.boot:spring-boot-starter'
 
     implementation 'net.kyori:adventure-serializer-configurate3:4.9.0'
     implementation "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 blossom{
@@ -37,4 +50,14 @@ shadowJar {
     }
     relocate 'net.kyori.adventure.serializer.configurate3', 'org.multiground.mglinker.libs.adventure.configurate3'
     relocate 'net.kyori.adventure.text.minimessage', 'org.multiground.mglinker.libs.adventure.text.minimessage'
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
