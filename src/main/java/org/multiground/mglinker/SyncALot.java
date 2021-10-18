@@ -59,7 +59,7 @@ public class SyncALot{
 
             p.getTabList().removeEntry(event.getPlayer().getGameProfile().getId());
             p.getTabList().addEntry(TabListEntry.builder()
-                            .displayName( mm.parse(String.format("[%s][%s]%s", event.getServer().getServerInfo().getName(),prefix,event.getPlayer().getUsername())).asComponent())
+                            .displayName( mm.parse(String.format("[%s][%s] %s", event.getServer().getServerInfo().getName(),prefix,event.getPlayer().getUsername())).asComponent())
                             .profile(event.getPlayer().getGameProfile())
                             .gameMode(0)
                             .tabList(p.getTabList())
