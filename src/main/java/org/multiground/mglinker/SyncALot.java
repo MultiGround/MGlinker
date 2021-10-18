@@ -35,7 +35,7 @@ public class SyncALot{
         for(Player p: server.getAllPlayers()){
             p.getTabList().removeEntry(event.getPlayer().getGameProfile().getId());
             p.getTabList().addEntry(TabListEntry.builder()
-                            .displayName(Component.text("[MultiGround] " + event.getPlayer().getUsername()))
+                            .displayName(Component.text("[MultiGround]" + event.getPlayer().getUsername()))
                             .profile(event.getPlayer().getGameProfile())
                             .gameMode(0)
                             .tabList(p.getTabList())
