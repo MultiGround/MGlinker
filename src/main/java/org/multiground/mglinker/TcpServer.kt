@@ -1,15 +1,23 @@
 package org.multiground.mglinker
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.velocitypowered.api.proxy.ProxyServer
 import de.leonhard.storage.Json
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.net.NetServer
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.security.KeyPair
+import java.util.*
 
 
 class TcpServer(serve: ProxyServer, file: Json): AbstractVerticle() {
     private val server: ProxyServer = serve
     private val config = file
+    private val keypair: KeyPair = Cypher.genRSAKeyPair()
     @Throws(Exception::class)
     override fun start() {
         val server: NetServer = vertx.createNetServer()
@@ -54,6 +62,39 @@ class TcpServer(serve: ProxyServer, file: Json): AbstractVerticle() {
                             this.config.set("${parsed[1]}.${parsed[3]}.balance", balance - parsed[4].toDouble())
                             this.config.set("${parsed[2]}.${parsed[3]}.balance", destBal + parsed[4].toDouble())
                         } else outBuffer.appendString("result-failure")
+                    }
+                    "keyRequest" -> {
+                        val publicKey = keypair.public
+
+                        //byte[] bytePublicKey = publicKey.getEncoded();
+                        //String base64PublicKey = Base64.getEncoder().encodeToString(bytePublicKey);
+                        val bytePublicKey = publicKey.encoded
+                        val base64PublicKey = Base64.getEncoder().encodeToString(bytePublicKey)
+                        outBuffer.appendString(base64PublicKey)
+                    }
+                    "ssValidate" -> {
+                        val privateKey = keypair.private
+
+                        val decAcc = Cypher.decryptRSA(parsed[2], privateKey)
+                        val decCli = Cypher.decryptRSA(parsed[3], privateKey)
+
+                        val payload = mapOf("accessToken" to decAcc, "clientToken" to decCli)
+                        val objectMapper = ObjectMapper()
+                        val requestBody: String = objectMapper
+                            .writeValueAsString(payload)
+
+
+                        val client = HttpClient.newBuilder().build()
+
+                        val request = HttpRequest.newBuilder()
+                            .uri(URI.create("https://authserver.mojang.com/validate"))
+                            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                            .build()
+
+                        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+                        if(response.statusCode() == 204) outBuffer.appendString("accepted")
+                        else outBuffer.appendString("invalid")
                     }
                 }
                 it.write(outBuffer)

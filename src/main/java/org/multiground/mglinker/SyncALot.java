@@ -32,7 +32,6 @@ public class SyncALot{
 
     @Subscribe
     public void onJoin(ServerConnectedEvent event){
-
         MiniMessage mm = MiniMessage.builder()
                 .transformation(TransformationType.COLOR)
                 .transformation(TransformationType.DECORATION)
@@ -41,12 +40,12 @@ public class SyncALot{
                 .build();
         for(Player p: server.getAllPlayers()){
             //get prefix if group is not default.
-            String disname;
             Set<String> prefix = Set.of("");
             String playerGroup = luckPerms
                     .getPlayerAdapter(Player.class)
                     .getUser(event.getPlayer())
                     .getPrimaryGroup();
+
             if(!playerGroup.equals("default")){
                 prefix = luckPerms
                         .getGroupManager()
@@ -59,7 +58,7 @@ public class SyncALot{
 
             p.getTabList().removeEntry(event.getPlayer().getGameProfile().getId());
             p.getTabList().addEntry(TabListEntry.builder()
-                            .displayName( mm.parse(String.format("[%s][%s] %s", event.getServer().getServerInfo().getName(),prefix,event.getPlayer().getUsername())).asComponent())
+                            .displayName(mm.parse(String.format("[%s][%s] %s", event.getServer().getServerInfo().getName(),prefix,event.getPlayer().getUsername())).asComponent())
                             .profile(event.getPlayer().getGameProfile())
                             .gameMode(0)
                             .tabList(p.getTabList())
