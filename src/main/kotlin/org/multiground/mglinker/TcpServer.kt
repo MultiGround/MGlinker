@@ -32,6 +32,12 @@ class TcpServer(serve: ProxyServer, file: Json): AbstractVerticle() {
 
                 val outBuffer = Buffer.buffer()
                 when(parsed[0]){
+                    "genPlayer" -> {
+                        this.config.set("${parsed[1]}.aurum.balance", 0.0)
+                        this.config.set("${parsed[1]}.dell.balance", 0.0)
+
+                        outBuffer.appendString("result-success")
+                    }
                     "balance" -> {
                         val balance = this.config.getDouble("${parsed[1]}.${parsed[2]}.balance")
                         outBuffer.appendString("result-${parsed[1]}-${parsed[2]}-${balance}")

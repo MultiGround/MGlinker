@@ -80,11 +80,7 @@ public class Cypher {
         PKCS8EncodedKeySpec keySpecPKCS8 =
                 new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyString));
 
-        try {
-            return keyFactory.generatePrivate(keySpecPKCS8);
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
+        return keyFactory.generatePrivate(keySpecPKCS8);
     }
 
     /**

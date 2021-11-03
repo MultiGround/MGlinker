@@ -7,7 +7,7 @@ import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
 
-class ConfHandler {
+class CSfHandler {
     fun loadConfig(path: Path): Json {
         val folder: File = path.toFile()
         val file = File(folder, "config.json")

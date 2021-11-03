@@ -11,14 +11,12 @@ import de.leonhard.storage.Json;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
-import java.util.concurrent.TimeUnit;
 
 
-
-@Plugin(id = "@ID@",
-        name = "@NAME@",
+@Plugin(id = "mglinker",
+        name = "MGLinker",
         description = "Link",
-        version = "@VERSION",
+        version = "1.0.1",
         authors = {"GiftShower_"},
         dependencies = {
             @Dependency(id = "luckperms")
@@ -34,7 +32,7 @@ public class Mglinker {
         this.server = server;
         this.logger = logger;
         this.folder = folder;
-        Json config = new ConfHandler().loadConfig(folder);
+        Json config = new CSfHandler().loadConfig(folder);
         logger.info("Initializing complete!");
     }
 
